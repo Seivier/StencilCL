@@ -1,5 +1,3 @@
-#include <OpenCL/OpenCL.h>
-
 #include <chrono>
 #include <cstdlib>
 #include <fstream>
@@ -10,7 +8,7 @@
 #define CL_HPP_TARGET_OPENCL_VERSION 120
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
 #define CL_HPP_ENABLE_EXCEPTIONS
-#include <OpenCL/opencl.hpp>
+#include <CL/opencl.hpp>
 
 #define N 16
 #define BLOCK_SIZE 8
@@ -18,8 +16,10 @@
 
 using std::chrono::microseconds;
 
-int main() {
-  try {
+int main()
+{
+  try
+  {
     const int size = N * sizeof(int);
     std::vector<int> in(N), out(N);
 
@@ -51,7 +51,8 @@ int main() {
 
     // Assign values to host variables
     auto t_start = std::chrono::high_resolution_clock::now();
-    for (auto &id : in) id = 1;
+    for (auto &id : in)
+      id = 1;
     auto t_end = std::chrono::high_resolution_clock::now();
     auto t_create_data =
         std::chrono::duration_cast<microseconds>(t_end - t_start).count();
@@ -65,7 +66,7 @@ int main() {
         std::chrono::duration_cast<microseconds>(t_end - t_start).count();
 
     // Read the program source
-    std::ifstream sourceFile("kernel.cl");
+    std::ifstream sourceFile("stencil.cl");
     std::stringstream sourceCode;
     sourceCode << sourceFile.rdbuf();
 
@@ -115,7 +116,9 @@ int main() {
     std::cout << "Time to execute the whole program: "
               << t_create_data + t_copy_to_device + t_kernel + t_copy_to_host
               << " microseconds\n";
-  } catch (cl::Error err) {
+  }
+  catch (cl::Error err)
+  {
     std::cerr << "Error (" << err.err() << "): " << err.what() << std::endl;
     return EXIT_FAILURE;
   }
